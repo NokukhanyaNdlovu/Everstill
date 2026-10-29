@@ -1,20 +1,30 @@
-# Everstill — photo-sharing website
+# Everstill — Photo-Sharing Website
 
-Responsive photo sharing with accounts, friends, albums, search, reporting, and administrator moderation. Stack matches the PRD: React (JavaScript), Node.js, MongoDB Atlas, CSS, native Fetch, session cookies, Git, and Docker.
+Everstill is a responsive photo-sharing website that allows users to share photos, connect with friends, create albums, search for content, and interact with posts. Administrators can moderate reported content and manage users.
+
+## Technology Stack
+
+- **Frontend:** React, JavaScript, CSS
+- **Backend:** Node.js, Express
+- **Database:** MongoDB Atlas
+- **Authentication:** Session-based authentication using HTTP-only cookies
+- **Deployment:** Docker, Docker Compose, and Nginx
+- **Testing:** Node.js API test script
 
 ## Requirements
 
-- Node.js 20+ (22 recommended)
-- A [MongoDB Atlas](https://www.mongodb.com/atlas) cluster
-- Docker Desktop if you want the containerized frontend and backend
+- Node.js 20 or later (Node.js 22 recommended)
+- A MongoDB Atlas cluster
+- Docker Desktop with Docker Compose
+- Git (for source control)
 
-## Environment
+## Environment Configuration
 
-Add the following to `.env` and set:
+Create a `.env` file in the project root, alongside `docker-compose.yml`, and configure the following variables using your own MongoDB Atlas connection details and a secure session secret:
 
-```
+```env
 MONGODB_URI=mongodb+srv://USER:PASSWORD@CLUSTER.mongodb.net/photo_sharing?retryWrites=true&w=majority
-SESSION_SECRET=a-long-random-string
+SESSION_SECRET=replace-with-a-long-random-string
 COOKIE_SECURE=false
 PORT=4000
 NODE_ENV=development
@@ -22,62 +32,117 @@ FRONTEND_ORIGIN=http://localhost:5173
 PUBLIC_BASE_URL=http://localhost:4000
 ```
 
-Do not commit `.env`. Atlas must allow your current IP (and `0.0.0.0/0` if Docker runs from a changing IP).
+Replace the example MongoDB credentials and session secret with your actual values. Do not commit or share the real `.env` file.
 
-## Local development
+Ensure MongoDB Atlas network access allows connections from the machine running the application.
 
-```bash
+## Running with Docker
+
+Run these commands from the project root directory.
+
+Build the images and start the application in the background:
+
+```powershell
+docker compose up --build -d
+```
+
+Check the container status:
+
+```powershell
+docker compose ps
+```
+
+Populate the database with sample data:
+
+```powershell
+docker compose run --rm backend node src/seed.js
+```
+
+Open the application at:
+
+- **Website:** http://localhost:8080
+- **API health endpoint:** http://localhost:4000/api/health
+
+View container logs:
+
+```powershell
+docker compose logs
+```
+
+Stop the application:
+
+```powershell
+docker compose down
+```
+
+## Running Locally
+
+### Backend
+
+Open a terminal in the project root and run:
+
+```powershell
 cd backend
 npm install
 npm run seed
 npm run dev
 ```
 
-```bash
+### Frontend
+
+Open a second terminal in the project root and run:
+
+```powershell
 cd frontend
 npm install
 npm run dev
 ```
 
-Open `http://localhost:5173`. The Vite dev server proxies `/api` and `/uploads` to the API.
+Open http://localhost:5173 in your browser.
 
-Seed logins (password for all: `Password123!`):
+**Note:** Local backend execution must be able to load the root `.env` file. The backend must also be able to connect to MongoDB Atlas. The Docker configuration loads the root `.env` file through `docker-compose.yml`.
+
+## Sample Accounts
+
+The seed script provides sample accounts for testing. The password for the documented sample accounts is:
+
+`Password123!`
 
 - `alice` — ordinary user with friends and posts
-- `admin` — administrator / moderator
-- `diego` has a pending request to `elena`
+- `admin` — administrator/moderator
+- `diego` — has a pending friend request to `elena`
 
-Hashtag `#architecture` is on a post with 3 reports so the global feed shows the community hide/reveal behaviour.
+The seeded `#architecture` post has three reports to demonstrate community hiding and moderation behaviour.
 
-## Docker
+Use sample credentials only in your local development environment.
 
-```bash
-docker compose up --build
-docker compose run --rm backend node src/seed.js
-```
+## Implemented Features
 
-App: `http://localhost:8080`  
-API (direct): `http://localhost:4000/api/health`
+- User registration, login and logout
+- Session-based authentication with HTTP-only cookies stored using MongoDB
+- Local and global feeds
+- User profiles with friend-based visibility rules
+- Sending, accepting and declining friend requests
+- Unfriending users
+- Photo posts with editable descriptions and hashtags
+- Comments and emoji reactions
+- Public albums
+- Search for people, posts, albums and hashtags, including autocomplete
+- Reporting posts and community report thresholds
+- Administrator moderation and content management
+- Notifications when an administrator deletes a user's post
+- Responsive layout for different screen sizes
 
-Nginx on the frontend container proxies `/api` and `/uploads` to the backend so session cookies stay first-party.
+## API Testing
 
-## What is implemented
+With the API running and the database seeded, execute the following command from the project root:
 
-- Splash, registration, login, logout, httpOnly `sid` cookies stored in MongoDB Atlas
-- Local/global feeds, profiles (friends see full details; others see name + picture)
-- Friend request send / accept / decline / unfriend
-- Photo posts (description + hashtags editable; image not replaceable)
-- Comments and five emoji reactions submitted as comments: ❤️ 😂 🔥 😮 😢
-- Public albums; deleting an album keeps the posts
-- Search (people, posts, albums, hashtags) with fuzzy matching and autocomplete
-- Reporting, 3+ report placeholder, admin review, delete post or remove reports
-- Toast when an administrator deleted a user’s post
-- Responsive CSS breakpoints at 768px and 1024px
-
-## API tests
-
-```bash
+```powershell
 node scripts/test-api.js
 ```
 
-Requires a running API and `MONGODB_URI` already seeded.
+The test script requires a running API and a configured, seeded database.
+
+## Repository
+
+GitHub repository: https://github.com/NokukhanyaNdlovu/Everstill
