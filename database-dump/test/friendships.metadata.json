@@ -1,0 +1,1 @@
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"},{"v":{"$numberInt":"2"},"key":{"requester":{"$numberInt":"1"},"recipient":{"$numberInt":"1"}},"name":"requester_1_recipient_1","background":true,"unique":true}],"uuid":"5745cdbe51ce45e1afb8d67d94337d41","collectionName":"friendships","type":"collection"}
