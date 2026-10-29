@@ -1,0 +1,17 @@
+node_modules/
+dist/
+.env
+.env.local
+.env.*
+!.env.example
+# Logs
+*.log
+.DS_Store
+*.dump
+*.bson
+*.sql
+backend/uploads/*
+!backend/uploads/.gitkeep
+frontend/dist/
+.idea/
+

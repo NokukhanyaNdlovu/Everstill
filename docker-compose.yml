@@ -1,0 +1,23 @@
+services:
+  backend:
+    build: ./backend
+    env_file:
+      - .env
+    environment:
+      PORT: 4000
+      COOKIE_SECURE: "false"
+      FRONTEND_ORIGIN: http://localhost:8080
+    volumes:
+      - uploads:/app/uploads
+    ports:
+      - "4000:4000"
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+
+volumes:
+  uploads:
